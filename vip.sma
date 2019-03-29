@@ -12,7 +12,7 @@
 
 #pragma tabsize 0
 
-#define newModels 6
+#define newModels 11
 //List of the old models
 new new_v_model[newModels][]={
     "models/vip/v_knife.mdl",
@@ -20,7 +20,12 @@ new new_v_model[newModels][]={
     "models/vip/v_usp.mdl",
     "models/vip/v_m4a1.mdl",
     "models/vip/v_ak47.mdl",
-    "models/vip/v_awp.mdl"
+    "models/vip/v_awp.mdl",
+    "models/vip/v_scout.mdl",
+    "models/vip/v_deagle.mdl",
+    "models/vip/v_hegrenade.mdl",
+    "models/vip/v_flashbang.mdl",
+    "models/vip/v_smokegrenade.mdl"
 };
 //List of the new models to replace the old ones
 new old_v_model[newModels][]={
@@ -29,7 +34,12 @@ new old_v_model[newModels][]={
     "models/v_usp.mdl",
     "models/v_m4a1.mdl",
     "models/v_ak47.mdl",
-    "models/v_awp.mdl"
+    "models/v_awp.mdl",
+    "models/v_scout.mdl",
+    "models/v_deagle.mdl",
+    "models/v_hegrenade.mdl",
+    "models/v_flashbang.mdl",
+    "models/v_smokegrenade.mdl"
 };
 //List of the new knife models
 new knifeModels[5][128]={
@@ -186,7 +196,7 @@ public Changeweapon_Hook(id){
 public GiveWeapons(id){
     fm_give_item(id,"CSW_VESTHELM");
     fm_set_user_health(id,200);
-    fm_set_user_armor(id,200);
+    cs_set_user_armor(id, 200, CS_ARMOR_VESTHELM);
     if(cs_get_user_team(id)==CS_TEAM_T){
         fm_give_item(id,"weapon_hegrenade");
         fm_give_item(id,"weapon_smokegrenade");
