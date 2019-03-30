@@ -219,7 +219,7 @@ public vips_online(){
     SetVipsMessage();
     set_hudmessage(	0, 134, 139, 0.1, 0.1, _, _, 4.0, _, _, 4);
     for(new i=0;i<33;i++){
-        if(showVips[i])
+        if(showVips[i] && is_user_alive(i))
             ShowSyncHudMsg(i, SyncHud, "%s", vipsOnlineText);
     }
     return PLUGIN_HANDLED
