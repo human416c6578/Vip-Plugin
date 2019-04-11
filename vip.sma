@@ -48,7 +48,7 @@ new knifeModels[6][128]={
     "models/vip/v_knife3.mdl",
     "models/vip/v_knife4.mdl",
     "models/vip/v_butcher.mdl",
-    "models/vip/v_butcher2.mdl"
+    "models/vip/redbutt.mdl"
 };
 
 new bool:skins[33];
@@ -293,7 +293,7 @@ public SelectSkinMenu(id){
     menu_additem( menu, "\wHuntsman", "", 0 );
     menu_additem( menu, "\wButterfly", "", 0 );
     menu_additem( menu, "\wGhost", "", 0 );
-    menu_additem( menu, "\wGhostButcher", "", 0 );
+    menu_additem( menu, "\wRedButt", "", 0 );
 
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
