@@ -42,12 +42,13 @@ new old_v_model[newModels][]={
     "models/v_smokegrenade.mdl"
 };
 //List of the new knife models
-new knifeModels[5][128]={
+new knifeModels[6][128]={
     "models/vip/v_knife.mdl",
     "models/vip/v_knife2.mdl",
     "models/vip/v_knife3.mdl",
     "models/vip/v_knife4.mdl",
-    "models/vip/v_butcher.mdl"
+    "models/vip/v_butcher.mdl",
+    "models/vip/v_butcher2.mdl"
 };
 
 new bool:skins[33];
@@ -104,7 +105,7 @@ public plugin_init(){
 public plugin_precache(){
     for(new i=0;i<newModels;i++)
         precache_model(new_v_model[i]);
-    for(new i=0;i<5;i++)
+    for(new i=0;i<6;i++)
         precache_model(knifeModels[i]);
 
     //precache vip models
@@ -292,6 +293,7 @@ public SelectSkinMenu(id){
     menu_additem( menu, "\wHuntsman", "", 0 );
     menu_additem( menu, "\wButterfly", "", 0 );
     menu_additem( menu, "\wGhost", "", 0 );
+    menu_additem( menu, "\wGhostButcher", "", 0 );
 
     menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
     menu_display( id, menu, 0 );
@@ -320,6 +322,10 @@ public menu2_handler( id, menu, item)
         case 4:
         {
             specialKnife[id][knifeId] = knifeModels[4];
+        }
+        case 5:
+        {
+            specialKnife[id][knifeId] = knifeModels[5];
         }
     }
     menu_destroy( menu );
