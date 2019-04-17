@@ -5,6 +5,7 @@
 #include <fakemeta_util>
 #include <hamsandwich>
 #include <engine>
+#include <nvault>
 
 #define PLUGIN "Vip"	
 #define VERSION "1.0"
@@ -65,6 +66,10 @@ new fileName[256];
 new vipsOnlineText[256];
 
 new knifeId;
+
+new vault;
+
+new lives[33];
 //Main
 public plugin_init(){
 	
@@ -78,10 +83,14 @@ public plugin_init(){
 
     register_clcmd( "say /vmenu","SkinMenu" );
 
+    register_clcmd("say /respawn", "Respawn");
+
     register_clcmd("amx_reload_vips", "LoadVips");
 
     register_event("CurWeapon","Changeweapon_Hook","be","1=1");
     RegisterHam(Ham_Spawn,"player","PlayerSpawn",1);
+
+    register_event("HLTV", "NewRound", "a", "1=0", "2=0")  
 
     //set file name
     get_configsdir(fileName,255);
@@ -98,7 +107,9 @@ public plugin_init(){
 
     register_think("vip_msg","ForwardThink");
 
-    register_event("ResetHUD", "resetModel", "b")
+    register_event("ResetHUD", "resetModel", "b");
+
+    vault = nvault_open( "SpecialKnife" );
 
 }
 //Precaching the skins from the list above
@@ -115,7 +126,7 @@ public plugin_precache(){
 //Event Connect Player
 public client_putinserver(id){
     skins[id]=true;
-    showVips[id]=true;
+    showVips[id]=false;
     if(is_user_bot(id))
         return;
 
@@ -127,22 +138,15 @@ public client_putinserver(id){
     for(new i = 0; i<sizeof(vipKey);i++){
         if(equal(Steamid,vipKey[i])){
             isVip[id] = true;
-            for(new i = 0;i<33;i++){
-                if(!showVips[i])
-                    return;
-            }
             break;
         }
         if(equal(Name,vipKey[i])){
             isVip[id] = true;
-            for(new i = 0;i<33;i++){
-                if(!showVips[i])
-                    return;
-            }
             break;
         }
 
     }
+    Load(id);
 }
 //Event Disconnect Player
 public client_disconnected(id){
@@ -155,6 +159,14 @@ public PlayerSpawn(id){
     GiveWeapons(id);
 
     return PLUGIN_CONTINUE;
+}
+//Event New Round
+public NewRound(){
+    for(new i = 0;i<33;i++){
+        if(is_user_connected(i) && isPlayerVip(i))
+            lives[i] = 2;
+    }
+
 }
 //Event ResetHUD, to set the player model
 public resetModel(id, level, cid){
@@ -328,12 +340,34 @@ public menu2_handler( id, menu, item)
             specialKnife[id][knifeId] = knifeModels[5];
         }
     }
+
+    Save(id);
     menu_destroy( menu );
     return PLUGIN_HANDLED;
 }
 //Show Motd
 public ShowMotd(id){
     show_motd(id,"addons/vip.html","Beneficii VIP");
+}
+
+public Respawn(id){
+    if(!isPlayerVip(id)){
+        client_print(id,print_chat, "Aceasta comanda este doar pentru VIP!");
+        return PLUGIN_CONTINUE;
+    }
+    if(is_user_alive(id)){
+        client_print(id,print_chat, "Trebuie sa fii mort pentru a folosi aceasta comanda!");
+        return PLUGIN_CONTINUE;
+    }
+    if(lives[id]>0){
+        ExecuteHamB(Ham_CS_RoundRespawn, id);
+        lives[id]--;
+    }
+    else{
+        client_print(id,print_chat, "Nu ai destule vieti!");
+    }
+        
+        
 }
 
 //Toggle some booleans
@@ -347,4 +381,37 @@ public ToggleVipShow(id){
 
 public isPlayerVip(id){
     return isVip[id];
+}
+
+public Save(id){
+    new name[30];
+    new key1[30];
+    new key2[30];
+
+    get_user_name( id , name , charsmax( name ) );
+
+    formatex(key1, charsmax(key1), "%s", name);
+    formatex(key2, charsmax(key2), "%s+1", name);
+    
+    nvault_set( vault , key1 , specialKnife[id][0]);
+    nvault_set( vault , key2 , specialKnife[id][1]);
+
+}
+
+public Load(id){
+    if(!isPlayerVip(id))
+        return PLUGIN_CONTINUE;
+
+    new name[30];
+    new key1[30];
+    new key2[30];
+
+    get_user_name( id , name , charsmax( name ) );
+
+    formatex(key1, charsmax(key1), "%s", name);
+    formatex(key2, charsmax(key2), "%s+1", name);
+
+    nvault_get( vault , key1 , specialKnife[id][0] , 127 );  
+    nvault_get( vault , key2 , specialKnife[id][1] , 127 );
+
 }
