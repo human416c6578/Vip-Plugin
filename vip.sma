@@ -210,8 +210,8 @@ public Changeweapon_Hook(id){
 //Giving weapons to vips
 public GiveWeapons(id){
 	fm_give_item(id,"CSW_VESTHELM");
-	fm_set_user_health(id,200);
-	cs_set_user_armor(id, 200, CS_ARMOR_VESTHELM);
+	fm_set_user_health(id,150);
+	cs_set_user_armor(id, 100, CS_ARMOR_VESTHELM);
 	if(cs_get_user_team(id)==CS_TEAM_T){
 		fm_give_item(id,"weapon_hegrenade");
 		fm_give_item(id,"weapon_smokegrenade");
