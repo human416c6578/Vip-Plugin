@@ -43,15 +43,12 @@ new old_v_model[newModels][]={
 	"models/v_smokegrenade.mdl"
 };
 //List of the new knife models
-new knifeModels[8][128]={
+new knifeModels[5][128]={
 	"models/vip/v_knife.mdl",
 	"models/vip/v_knife2.mdl",
-	"models/vip/v_knife3.mdl",
-	"models/vip/v_knife4.mdl",
 	"models/vip/v_butcher.mdl",
-	"models/vip/redbutt.mdl",
 	"models/vip/v_butcher4.mdl",
-	"models/vip/v_butcher3.mdl"
+	"models/vip/v_hide.mdl"
 };
 
 new bool:skins[33];
@@ -118,7 +115,7 @@ public plugin_init(){
 public plugin_precache(){
 	for(new i=0;i<newModels;i++)
 		precache_model(new_v_model[i]);
-	for(new i=0;i<8;i++)
+	for(new i=0;i<5;i++)
 		precache_model(knifeModels[i]);
 
 	//precache vip models
@@ -158,7 +155,7 @@ public client_disconnected(id){
 public PlayerSpawn(id){
 	if(!(isPlayerVip(id))||!is_user_connected(id))
 		return PLUGIN_CONTINUE;
-	GiveWeapons(id);
+	set_task(0.3,"GiveWeapons",id);
 
 	return PLUGIN_CONTINUE;
 }
@@ -212,11 +209,9 @@ public GiveWeapons(id){
 	fm_give_item(id,"CSW_VESTHELM");
 	fm_set_user_health(id,150);
 	cs_set_user_armor(id, 100, CS_ARMOR_VESTHELM);
-	if(cs_get_user_team(id)==CS_TEAM_T){
-		fm_give_item(id,"weapon_hegrenade");
-		fm_give_item(id,"weapon_smokegrenade");
-		fm_give_item(id,"weapon_flashbang");
-	}
+	fm_give_item(id,"weapon_hegrenade");
+	fm_give_item(id,"weapon_smokegrenade");
+	fm_give_item(id,"weapon_flashbang");
 }
 //Set the hud message
 public SetVipsMessage(){
@@ -304,11 +299,9 @@ public SelectSkinMenu(id){
 
 	menu_additem( menu, "\wRainbow", "", 0 );
 	menu_additem( menu, "\wAcid", "", 0 );
-	menu_additem( menu, "\wHuntsman", "", 0 );
-	menu_additem( menu, "\wButterfly", "", 0 );
 	menu_additem( menu, "\wGhost", "", 0 );
-	menu_additem( menu, "\wRedButt", "", 0 );
-	menu_additem( menu, "\wFade", "", 0 )
+	menu_additem( menu, "\wFade", "", 0 );
+	menu_additem( menu, "\wHide", "", 0 );
 
 	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
 	menu_display( id, menu, 0 );
@@ -338,14 +331,6 @@ public menu2_handler( id, menu, item)
 		{
 			specialKnife[id][knifeId] = knifeModels[4];
 		}
-		case 5:
-		{
-			specialKnife[id][knifeId] = knifeModels[5];
-		}
-		case 6:
-		{
-			specialKnife[id][knifeId] = knifeModels[6];
-		}
 	}
 
 	Save(id);
@@ -360,11 +345,11 @@ public ShowMotd(id){
 public Respawn(id){
 	if(!isPlayerVip(id)){
 		client_print(id,print_chat, "Aceasta comanda este doar pentru VIP!");
-		return PLUGIN_CONTINUE;
+		return PLUGIN_HANDLED;
 	}
 	if(is_user_alive(id)){
 		client_print(id,print_chat, "Trebuie sa fii mort pentru a folosi aceasta comanda!");
-		return PLUGIN_CONTINUE;
+		return PLUGIN_HANDLED;
 	}
 	if(lives[id]>0){
 		ExecuteHamB(Ham_CS_RoundRespawn, id);
@@ -373,8 +358,8 @@ public Respawn(id){
 	else{
 		client_print(id,print_chat, "Nu ai destule vieti!");
 	}
-		
-		
+	
+	return PLUGIN_HANDLED;
 }
 
 //Toggle some booleans
