@@ -43,13 +43,140 @@ new old_v_model[newModels][]={
 	"models/v_smokegrenade.mdl"
 };
 //List of the new knife models
-new knifeModels[5][128]={
+new knifeModels[6][128]={
 	"models/vip/v_knife.mdl",
 	"models/vip/v_knife2.mdl",
 	"models/vip/v_butcher.mdl",
 	"models/vip/v_butcher4.mdl",
+	"models/vip/redbutt.mdl",
 	"models/vip/v_hide.mdl"
 };
+
+new playerModelNames[13][128]={
+	"Buzz",
+	"Jill",
+	"Trump",
+	"Hitler",
+	"Alice",
+	"Pepsiman",
+	"Flash",
+	"Horsemask",
+	"Sonic",
+	"DrunkSanta",
+	"Deadpool",
+	"Subzero",
+	"Xiah"
+}
+
+new playerModelsIDs[13][128]={
+	"buzzlightyear",
+	"Jill",
+	"Trump",
+	"Hitler",
+	"Pepsiman",
+	"alice",
+	"Flash",
+	"Horsemask",
+	"Sonic",
+	"DrunkSanta",
+	"deadpool",
+	"subzero",
+	"xiah"
+};
+
+//List of record sounds
+new recordSounds[42][128]={
+	"misc/yes.wav",
+	"misc/FORCE.WAV",
+	"misc/HIBABE.WAV",
+	"misc/THEONE.WAV",
+	"misc/YMCA.WAV",
+	"misc/anger.wav",
+	"misc/rapgod.wav",
+	"misc/shallnotpass.wav",
+	"misc/Taraf.wav",
+	"misc/Electronica1.wav",
+	"misc/Dubstep1.wav",
+	"misc/avril.wav",
+	"misc/bodies.wav",
+	"misc/beast.wav",
+	"misc/rise.wav",
+	"misc/rock.wav",
+	"misc/eve.wav",
+	"misc/adderal.mp3",
+	"misc/Babylon.mp3",
+	"misc/colorblind.mp3",
+	"misc/doyouloveme.mp3",
+	"misc/dropndabomb.mp3",
+	"misc/drugaddicts.mp3",
+	"misc/leh.mp3",
+	"misc/likemiley.mp3",
+	"misc/LockMyHips.mp3",
+	"misc/micama.mp3",
+	"misc/scoresuite.mp3",
+	"misc/shisha.mp3",
+	"misc/shootingstars.mp3",
+	"misc/StillCold.mp3",
+	"misc/tbc.mp3",
+	"misc/youdontoweme.mp3",
+	"misc/zooted.mp3",
+	"misc/allthislove.mp3",
+	"misc/gasolinev2.mp3",
+	"misc/happier.mp3",
+	"misc/manele.mp3",
+	"misc/psycho.mp3",
+	"misc/saymyname.mp3",
+	"misc/sweetbutpsychov2.mp3",
+	"misc/sunflower.mp3"
+};
+
+new recordSoundsNames[42][128]={
+	"Yes",
+	"May The Force Be With You",
+	"Helloo Babee",
+	"The One and Only",
+	"YMCA",
+	"Filty Animal",
+	"Rap God",
+	"You shall not pass",
+	"Taraf",
+	"Electronica #1",
+	"Dubstep #1",
+	"Every Thing",
+	"Let the bodies hit the floor",
+	"Beast",
+	"Some Day We will Rise",
+	"Rock #1",
+	"E V E",
+	"Adderal",
+	"Babylon",
+	"ColorBlind",
+	"Do you love me?",
+	"Droppin da bomb",
+	"Drug Addicts",
+	"LEH",
+	"Twerk it like Miley",
+	"Lock My Hips",
+	"Mi Cama",
+	"Score Suite",
+	"Shisha",
+	"Shooting Stars",
+	"Still Cold",
+	"TBC",
+	"You Don't Owe Me",
+	"Zooted",
+	"All This Love", // NOU
+	"Gasoline",
+	"Happier",
+	"Manele Manele",
+	"Psycho",
+	"Say My Name",
+	"Sweet But Psycho",
+	"Sunflower"
+};
+
+new vipSelectedSound[33][128];
+
 
 new bool:skins[33];
 new SyncHud;
@@ -59,6 +186,7 @@ new vipKey[512][64];
 new bool:isVip[33];
 
 new specialKnife[33][2][128];
+new playerSkin[33][128];
 
 new fileName[256];
 
@@ -69,6 +197,11 @@ new knifeId;
 new vault;
 
 new lives[33];
+
+#define SCOREATTRIB_NONE    0
+#define SCOREATTRIB_DEAD    ( 1 << 0 )
+#define SCOREATTRIB_VIP  ( 1 << 2 )
+
 //Main
 public plugin_init(){
 	
@@ -80,7 +213,7 @@ public plugin_init(){
 
 	register_clcmd("say /vip", "ShowMotd");
 
-	register_clcmd( "say /vmenu","SkinMenu" );
+	register_clcmd( "say /vmenu","VipMenu" );
 
 	register_clcmd("say /respawn", "Respawn");
 
@@ -110,17 +243,23 @@ public plugin_init(){
 
 	vault = nvault_open( "SpecialKnife" );
 
+	register_message( get_user_msgid( "ScoreAttrib" ), "MessageScoreAttrib" );
 }
 //Precaching the skins from the list above
 public plugin_precache(){
 	for(new i=0;i<newModels;i++)
 		precache_model(new_v_model[i]);
-	for(new i=0;i<5;i++)
+	for(new i=0;i<6;i++)
 		precache_model(knifeModels[i]);
 
 	//precache vip models
 	precache_model("models/player/admin_ct/admin_ct.mdl")
 	precache_model("models/player/admin_te/admin_te.mdl")
+
+	for(new i = 0; i < 42; i++)
+	{
+		precache_sound(recordSounds[i])
+	}
 }
 //Event Connect Player
 public client_putinserver(id){
@@ -159,6 +298,16 @@ public PlayerSpawn(id){
 
 	return PLUGIN_CONTINUE;
 }
+//Event Killed player
+public client_death(killer,victim,wpnindex,hitplace,TK){
+	new command[128];
+	if(killer == victim || !isPlayerVip(killer)) return PLUGIN_CONTINUE;
+	if(cs_get_user_team(killer) == CS_TEAM_CT){
+		formatex(command, 127, "spk %s", vipSelectedSound[killer])
+		client_cmd(0, "%s", command);
+	}
+	return PLUGIN_CONTINUE;
+}  
 //Event New Round
 public NewRound(){
 	for(new i = 0;i<33;i++){
@@ -170,15 +319,20 @@ public NewRound(){
 //Event ResetHUD, to set the player model
 public resetModel(id, level, cid){
 	if (isPlayerVip(id)){
-		new CsTeams:userTeam = cs_get_user_team(id)
-		if (userTeam == CS_TEAM_T){
-			cs_set_user_model(id, "admin_te");
-		}
-		else if(userTeam == CS_TEAM_CT){
-			cs_set_user_model(id, "admin_ct");
+		if(!playerSkin[id][0]){
+			new CsTeams:userTeam = cs_get_user_team(id)
+			if (userTeam == CS_TEAM_T){
+				cs_set_user_model(id, "admin_te");
+			}
+			else if(userTeam == CS_TEAM_CT){
+				cs_set_user_model(id, "admin_ct");
+			}
+			else{
+				cs_reset_user_model(id);
+			}
 		}
 		else{
-			cs_reset_user_model(id);
+			cs_set_user_model(id, playerSkin[id]);
 		}
 	}
 
@@ -213,6 +367,14 @@ public GiveWeapons(id){
 	fm_give_item(id,"weapon_smokegrenade");
 	fm_give_item(id,"weapon_flashbang");
 }
+//Show vip status in scoreboard
+public MessageScoreAttrib( iMsgID, iDest, iReceiver ) {
+    new iPlayer = get_msg_arg_int( 1 );
+    if( is_user_connected(iPlayer) && isPlayerVip(iPlayer)) {
+        set_msg_arg_int( 2, ARG_BYTE, is_user_alive( iPlayer ) ? SCOREATTRIB_VIP : SCOREATTRIB_DEAD );
+    }
+}
+
 //Set the hud message
 public SetVipsMessage(){
 	new Name[32];
@@ -257,6 +419,68 @@ public LoadVips(){
 	}
 
 	return PLUGIN_CONTINUE;
+}
+//Menu to choose the menu you want
+public VipMenu(id){
+	if(!isPlayerVip(id)){
+		client_print(id,print_chat, "Acest meniu este doar pentru VIP!");
+		return PLUGIN_CONTINUE;
+	}
+	new menu = menu_create( "\rChoose The Menu You Want!:", "menu_handler1" );
+
+	menu_additem( menu, "\wKnife Skins", "", 0 );
+	menu_additem( menu, "\wPlayer Skins", "", 0 );
+	menu_additem( menu, "\wKill Sounds", "", 0);
+
+	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
+	menu_display( id, menu, 0 );
+
+	return PLUGIN_CONTINUE;
+}
+public menu_handler1( id, menu, item ){
+	switch( item )
+	{
+		case 0:
+		{
+			SkinMenu(id);
+		}
+		case 1:
+		{
+			PlayerSkinMenu(id);
+		}
+		case 2:
+		{
+			SoundsMenu(id);
+		}
+	}
+	menu_destroy( menu );
+	return PLUGIN_HANDLED;
+}
+//Menu to choose a custom player skin
+public PlayerSkinMenu(id){
+	if(!isPlayerVip(id)){
+		client_print(id,print_chat, "Acest meniu este doar pentru VIP!");
+		return PLUGIN_CONTINUE;
+	}
+	new txt[128];
+	new menu = menu_create( "\rChoose The Skin You Want To Set!:", "menu_handler2" );
+
+	for(new i =0;i<13;i++){
+		format(txt,charsmax(txt),"\w%s", playerModelNames[i])
+		menu_additem( menu, txt, "", 0 );
+	}
+
+	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
+	menu_display( id, menu, 0 );
+
+	return PLUGIN_CONTINUE;
+}
+//Handler for the first menu
+public menu_handler2( id, menu, item ){
+	cs_set_user_model(id,playerModelsIDs[item], true);
+	playerSkin[id] = playerModelsIDs[item];
+	menu_destroy( menu );
+	return PLUGIN_HANDLED;
 }
 //Menu to choose a custom knife skin
 public SkinMenu(id){
@@ -307,8 +531,7 @@ public SelectSkinMenu(id){
 	menu_display( id, menu, 0 );
 }
 //Second Handler for the second menu
-public menu2_handler( id, menu, item)
- {
+public menu2_handler( id, menu, item){
 	switch( item )
 	{
 		case 0:
@@ -332,6 +555,27 @@ public menu2_handler( id, menu, item)
 			specialKnife[id][knifeId] = knifeModels[4];
 		}
 	}
+
+	Save(id);
+	menu_destroy( menu );
+	return PLUGIN_HANDLED;
+}
+//Menu to choose the sound
+public SoundsMenu(id){
+	new menu = menu_create( "\rChoose Kill Sound!:", "menu_handler12" );
+	new txt[128];
+	for(new i =0;i<42;i++){
+		format(txt,charsmax(txt),"\w%s", recordSoundsNames[i])
+		menu_additem( menu, txt, "", 0 );
+	}
+
+	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
+	menu_display( id, menu, 0 );
+	return PLUGIN_CONTINUE;
+}
+//Second Handler for the second menu
+public menu_handler12( id, menu, item){
+	vipSelectedSound[id] = recordSounds[item];
 
 	Save(id);
 	menu_destroy( menu );
@@ -374,22 +618,25 @@ public ToggleVipShow(id){
 public isPlayerVip(id){
 	return isVip[id];
 }
-
+//save the skins and sounds for the vips
 public Save(id){
 	new name[30];
 	new key1[30];
 	new key2[30];
+	new key3[30];
 
 	get_user_name( id , name , charsmax( name ) );
 
 	formatex(key1, charsmax(key1), "%s", name);
 	formatex(key2, charsmax(key2), "%s+1", name);
+	formatex(key3, charsmax(key2), "%s+2", name);
 	
 	nvault_set( vault , key1 , specialKnife[id][0]);
 	nvault_set( vault , key2 , specialKnife[id][1]);
+	nvault_set( vault , key3 , playerSkin[id]);
 
 }
-
+//loads the skins and sounds for the vips
 public Load(id){
 	if(!isPlayerVip(id))
 		return PLUGIN_CONTINUE;
@@ -397,13 +644,17 @@ public Load(id){
 	new name[30];
 	new key1[30];
 	new key2[30];
+	new key3[30];
 
 	get_user_name( id , name , charsmax( name ) );
 
 	formatex(key1, charsmax(key1), "%s", name);
 	formatex(key2, charsmax(key2), "%s+1", name);
+	formatex(key3, charsmax(key2), "%s+2", name);
 
 	nvault_get( vault , key1 , specialKnife[id][0] , 127 );  
 	nvault_get( vault , key2 , specialKnife[id][1] , 127 );
+	nvault_get( vault , key3 , playerSkin[id] , 127 );
 
+	return PLUGIN_CONTINUE;
 }
