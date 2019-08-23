@@ -1,5 +1,5 @@
 # Vip_plugin
-A plugin written in pawn for amxmodx for Deathrun GameMode. 
+A plugin written in pawn for amxmodx.
 
 You can add VIPs and they'll benefit from different aspects. 
 
