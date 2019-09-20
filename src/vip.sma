@@ -6,6 +6,7 @@
 #include <hamsandwich>
 #include <engine>
 #include <nvault>
+#include <fun>
 
 #define PLUGIN "Vip"	
 #define VERSION "1.0"
@@ -13,169 +14,85 @@
 
 #pragma tabsize 0
 
-#define newModels 11
+#define newModels 9
+#define playerModels 17
 //List of the old models
 new new_v_model[newModels][]={
-	"models/vip/v_knife.mdl",
-	"models/vip/v_butcher.mdl",
-	"models/vip/v_usp.mdl",
-	"models/vip/v_m4a1.mdl",
-	"models/vip/v_ak47.mdl",
-	"models/vip/v_awp.mdl",
-	"models/vip/v_scout.mdl",
-	"models/vip/v_deagle1.mdl",
+	"models/vip/v_deagle2.mdl",
 	"models/vip/v_hegrenade.mdl",
 	"models/vip/v_flashbang.mdl",
-	"models/vip/v_smokegrenade.mdl"
+	"models/vip/v_smokegrenade.mdl",
+	"models/vip/v_m4a12.mdl",
+	"models/vip/v_ak472.mdl",
+	"models/vip/v_scout.mdl",
+	"models/vip/v_awp2.mdl",
+	"models/vip/v_usp.mdl"
 };
 //List of the new models to replace the old ones
 new old_v_model[newModels][]={
-	"models/v_knife.mdl",
-	"models/knife-mod/v_butcher.mdl",
-	"models/v_usp.mdl",
-	"models/v_m4a1.mdl",
-	"models/v_ak47.mdl",
-	"models/v_awp.mdl",
-	"models/v_scout.mdl",
 	"models/v_deagle.mdl",
 	"models/v_hegrenade.mdl",
 	"models/v_flashbang.mdl",
-	"models/v_smokegrenade.mdl"
+	"models/v_smokegrenade.mdl",
+	"models/v_m4a1.mdl",
+	"models/v_ak47.mdl",
+	"models/v_scout.mdl",
+	"models/v_awp.mdl",
+	"models/v_usp.mdl"
 };
 //List of the new knife models
-new knifeModels[6][128]={
+new knifeModels[9][128]={
+	"models/v_knife.mdl",
 	"models/vip/v_knife.mdl",
 	"models/vip/v_knife2.mdl",
 	"models/vip/v_butcher.mdl",
 	"models/vip/v_butcher4.mdl",
 	"models/vip/redbutt.mdl",
+	"models/vip/v_butcher5.mdl",
+	"models/vip/v_shark.mdl",
 	"models/vip/v_hide.mdl"
+	
 };
 
-new playerModelNames[13][128]={
-	"Buzz",
+new playerModelNames[playerModels][128]={
+	"Default",
 	"Jill",
 	"Trump",
 	"Hitler",
+	"Stalin",
 	"Alice",
 	"Pepsiman",
-	"Flash",
 	"Horsemask",
-	"Sonic",
 	"DrunkSanta",
 	"Deadpool",
 	"Subzero",
-	"Xiah"
+	"Xiah",
+	"Sakura",
+	"Ema",
+	"Snow",
+	"Dorothy",
+	"Jack Sparrow"
 }
 
-new playerModelsIDs[13][128]={
-	"buzzlightyear",
+new playerModelsIDs[playerModels][128]={
+	"admin_ct",
 	"Jill",
 	"Trump",
 	"Hitler",
-	"Pepsiman",
+	"stalin",
 	"alice",
-	"Flash",
+	"Pepsiman",
 	"Horsemask",
-	"Sonic",
 	"DrunkSanta",
 	"deadpool",
 	"subzero",
-	"xiah"
+	"xiah",
+	"sakura",
+	"ema",
+	"snow",
+	"dorothy",
+	"jack"
 };
-
-//List of record sounds
-new recordSounds[42][128]={
-	"misc/yes.wav",
-	"misc/FORCE.WAV",
-	"misc/HIBABE.WAV",
-	"misc/THEONE.WAV",
-	"misc/YMCA.WAV",
-	"misc/anger.wav",
-	"misc/rapgod.wav",
-	"misc/shallnotpass.wav",
-	"misc/Taraf.wav",
-	"misc/Electronica1.wav",
-	"misc/Dubstep1.wav",
-	"misc/avril.wav",
-	"misc/bodies.wav",
-	"misc/beast.wav",
-	"misc/rise.wav",
-	"misc/rock.wav",
-	"misc/eve.wav",
-	"misc/adderal.mp3",
-	"misc/Babylon.mp3",
-	"misc/colorblind.mp3",
-	"misc/doyouloveme.mp3",
-	"misc/dropndabomb.mp3",
-	"misc/drugaddicts.mp3",
-	"misc/leh.mp3",
-	"misc/likemiley.mp3",
-	"misc/LockMyHips.mp3",
-	"misc/micama.mp3",
-	"misc/scoresuite.mp3",
-	"misc/shisha.mp3",
-	"misc/shootingstars.mp3",
-	"misc/StillCold.mp3",
-	"misc/tbc.mp3",
-	"misc/youdontoweme.mp3",
-	"misc/zooted.mp3",
-	"misc/allthislove.mp3",
-	"misc/gasolinev2.mp3",
-	"misc/happier.mp3",
-	"misc/manele.mp3",
-	"misc/psycho.mp3",
-	"misc/saymyname.mp3",
-	"misc/sweetbutpsychov2.mp3",
-	"misc/sunflower.mp3"
-};
-
-new recordSoundsNames[42][128]={
-	"Yes",
-	"May The Force Be With You",
-	"Helloo Babee",
-	"The One and Only",
-	"YMCA",
-	"Filty Animal",
-	"Rap God",
-	"You shall not pass",
-	"Taraf",
-	"Electronica #1",
-	"Dubstep #1",
-	"Every Thing",
-	"Let the bodies hit the floor",
-	"Beast",
-	"Some Day We will Rise",
-	"Rock #1",
-	"E V E",
-	"Adderal",
-	"Babylon",
-	"ColorBlind",
-	"Do you love me?",
-	"Droppin da bomb",
-	"Drug Addicts",
-	"LEH",
-	"Twerk it like Miley",
-	"Lock My Hips",
-	"Mi Cama",
-	"Score Suite",
-	"Shisha",
-	"Shooting Stars",
-	"Still Cold",
-	"TBC",
-	"You Don't Owe Me",
-	"Zooted",
-	"All This Love", // NOU
-	"Gasoline",
-	"Happier",
-	"Manele Manele",
-	"Psycho",
-	"Say My Name",
-	"Sweet But Psycho",
-	"Sunflower"
-};
-
-new vipSelectedSound[33][128];
 
 
 new bool:skins[33];
@@ -241,7 +158,7 @@ public plugin_init(){
 
 	register_event("ResetHUD", "resetModel", "b");
 
-	vault = nvault_open( "SpecialKnife" );
+	vault = nvault_open( "SpecialKnife1" );
 
 	register_message( get_user_msgid( "ScoreAttrib" ), "MessageScoreAttrib" );
 }
@@ -249,17 +166,35 @@ public plugin_init(){
 public plugin_precache(){
 	for(new i=0;i<newModels;i++)
 		precache_model(new_v_model[i]);
-	for(new i=0;i<6;i++)
+	for(new i=0;i<9;i++)
 		precache_model(knifeModels[i]);
 
 	//precache vip models
 	precache_model("models/player/admin_ct/admin_ct.mdl")
 	precache_model("models/player/admin_te/admin_te.mdl")
 
-	for(new i = 0; i < 42; i++)
-	{
-		precache_sound(recordSounds[i])
-	}
+
+	precache_model("models/player/Jill/Jill.mdl");
+	precache_model("models/player/Trump/Trump.mdl");
+	precache_model("models/player/Hitler/Hitler.mdl");
+	precache_model("models/player/alice/alice.mdl");
+	precache_model("models/player/Pepsiman/Pepsiman.mdl");
+	precache_model("models/player/Horsemask/Horsemask.mdl");
+	precache_model("models/player/DrunkSanta/DrunkSanta.mdl");
+	precache_model("models/player/deadpool/deadpool.mdl");
+	precache_model("models/player/subzero/subzero.mdl");
+	precache_model("models/player/xiah/xiah.mdl");
+	precache_model("models/player/sakura/sakura.mdl");
+	precache_model("models/player/ema/ema.mdl");
+	precache_model("models/player/snow/snow.mdl");
+	precache_model("models/player/stalin/stalin.mdl");
+	precache_model("models/player/dorothy/dorothy.mdl");
+	precache_model("models/player/sakura/sakurat.mdl");
+	precache_model("models/player/ema/emat.mdl");
+	precache_model("models/player/snow/snowt.mdl");
+	precache_model("models/player/stalin/stalint.mdl");
+	precache_model("models/player/dorothy/dorothyt.mdl");
+	precache_model("models/player/jack/jack.mdl");
 }
 //Event Connect Player
 public client_putinserver(id){
@@ -289,6 +224,7 @@ public client_putinserver(id){
 //Event Disconnect Player
 public client_disconnected(id){
 	isVip[id] = false;
+	playerSkin[id] = "";
 }
 //Event Spawn Player
 public PlayerSpawn(id){
@@ -298,16 +234,7 @@ public PlayerSpawn(id){
 
 	return PLUGIN_CONTINUE;
 }
-//Event Killed player
-public client_death(killer,victim,wpnindex,hitplace,TK){
-	new command[128];
-	if(killer == victim || !isPlayerVip(killer)) return PLUGIN_CONTINUE;
-	if(cs_get_user_team(killer) == CS_TEAM_CT){
-		formatex(command, 127, "spk %s", vipSelectedSound[killer])
-		client_cmd(0, "%s", command);
-	}
-	return PLUGIN_CONTINUE;
-}  
+
 //Event New Round
 public NewRound(){
 	for(new i = 0;i<33;i++){
@@ -332,7 +259,12 @@ public resetModel(id, level, cid){
 			}
 		}
 		else{
-			cs_set_user_model(id, playerSkin[id]);
+			if(equali(playerSkin[id], "admin_ct") && cs_get_user_team(id) == CS_TEAM_T)
+				cs_set_user_model(id, "admin_te");
+			else if(equali(playerSkin[id], "admin_te") && cs_get_user_team(id) == CS_TEAM_CT)
+				cs_set_user_model(id, "admin_ct");
+			else
+				cs_set_user_model(id, playerSkin[id]);
 		}
 	}
 
@@ -430,13 +362,15 @@ public VipMenu(id){
 
 	menu_additem( menu, "\wKnife Skins", "", 0 );
 	menu_additem( menu, "\wPlayer Skins", "", 0 );
-	menu_additem( menu, "\wKill Sounds", "", 0);
+	menu_additem( menu, "\wGLOW", "", 0 );
+	//menu_additem( menu, "\wKill Sounds", "", 0);
 
 	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
 	menu_display( id, menu, 0 );
 
 	return PLUGIN_CONTINUE;
 }
+//menu handler for the vip menu /vmenu
 public menu_handler1( id, menu, item ){
 	switch( item )
 	{
@@ -450,7 +384,8 @@ public menu_handler1( id, menu, item ){
 		}
 		case 2:
 		{
-			SoundsMenu(id);
+			CmdGlow(id);
+			//SoundsMenu(id);
 		}
 	}
 	menu_destroy( menu );
@@ -464,8 +399,8 @@ public PlayerSkinMenu(id){
 	}
 	new txt[128];
 	new menu = menu_create( "\rChoose The Skin You Want To Set!:", "menu_handler2" );
-
-	for(new i =0;i<13;i++){
+	format(txt,charsmax(txt),"\wDefault")
+	for(new i =0;i<playerModels;i++){
 		format(txt,charsmax(txt),"\w%s", playerModelNames[i])
 		menu_additem( menu, txt, "", 0 );
 	}
@@ -475,10 +410,32 @@ public PlayerSkinMenu(id){
 
 	return PLUGIN_CONTINUE;
 }
-//Handler for the first menu
+//Handler for the playerskin menu
 public menu_handler2( id, menu, item ){
+	 //Do a check to see if they exited because menu_item_getinfo ( see below ) will give an error if the item is MENU_EXIT
+	if ( item == MENU_EXIT )
+	{
+		menu_destroy( menu );
+		return PLUGIN_HANDLED;
+	}
+	//Default
+	if(item == 0){
+		new CsTeams:userTeam = cs_get_user_team(id);
+		if (userTeam == CS_TEAM_T){
+			cs_set_user_model(id, "admin_te");
+			playerSkin[id] = "admin_te";
+		}
+		else if(userTeam == CS_TEAM_CT){
+			cs_set_user_model(id, "admin_ct");
+			playerSkin[id] = "admin_ct";
+			
+		}
+		menu_destroy(menu);
+		return PLUGIN_CONTINUE;
+	}
 	cs_set_user_model(id,playerModelsIDs[item], true);
 	playerSkin[id] = playerModelsIDs[item];
+	Save(id);
 	menu_destroy( menu );
 	return PLUGIN_HANDLED;
 }
@@ -498,7 +455,7 @@ public SkinMenu(id){
 
 	return PLUGIN_CONTINUE;
 }
-//Handler for the first menu
+//Handler for the knife skin menu
 public menu_handler( id, menu, item ){
 	switch( item )
 	{
@@ -521,10 +478,14 @@ public SelectSkinMenu(id){
 
 	new menu = menu_create( "\rChoose Skin!:", "menu2_handler" );
 
+	menu_additem( menu, "\wDefault", "", 0 );
 	menu_additem( menu, "\wRainbow", "", 0 );
 	menu_additem( menu, "\wAcid", "", 0 );
 	menu_additem( menu, "\wGhost", "", 0 );
 	menu_additem( menu, "\wFade", "", 0 );
+	menu_additem( menu, "\wRedButt", "", 0 );
+	menu_additem( menu, "\wMonster", "", 0 );
+	menu_additem( menu, "\wShark", "", 0 );
 	menu_additem( menu, "\wHide", "", 0 );
 
 	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
@@ -532,54 +493,101 @@ public SelectSkinMenu(id){
 }
 //Second Handler for the second menu
 public menu2_handler( id, menu, item){
-	switch( item )
+	if(knifeId == 1 && item == 0){
+		specialKnife[id][knifeId] = "models/knife-mod/v_butcher.mdl";
+		Save(id);
+		menu_destroy(menu);
+		return PLUGIN_CONTINUE;
+	}
+	specialKnife[id][knifeId] = knifeModels[item];
+	Save(id);
+	menu_destroy( menu );
+	return PLUGIN_HANDLED;
+}
+
+public CmdGlow(id){
+	if(!is_user_alive(id) || !is_user_connected(id))
 	{
-		case 0:
+		return PLUGIN_HANDLED
+	}
+	new GlowMenu = menu_create("GLOW","GlowMenuChoice")
+      
+	//Albastru^n 7.  Alb^n 8.  Random^n^n 9.  Opreste glow-ul^n^n 0.  Exit.") 
+	menu_additem(GlowMenu,"Opreste glow-ul [TURN OFF]")
+	menu_additem(GlowMenu,"Rosu [RED]")
+	menu_additem(GlowMenu,"Portocaliu [ORANGE]")
+	menu_additem(GlowMenu,"Galben [YELLOW]")
+	menu_additem(GlowMenu,"Verde [GREEN]")
+	menu_additem(GlowMenu,"Roz [PINK]")
+	menu_additem(GlowMenu,"Albastru [BLUE]")
+	menu_additem(GlowMenu,"Alb [WHITE]")
+	menu_additem(GlowMenu,"Random")
+	menu_setprop(GlowMenu,MPROP_EXIT,MEXIT_ALL)
+	menu_display(id,GlowMenu,0)
+	return PLUGIN_CONTINUE
+}
+public GlowMenuChoice(id,GlowMenu,key) { 
+	new Client[21] 
+	get_user_name(id,Client,20);
+
+	switch(key) 
+	{ 
+		case 0: 
 		{
-			specialKnife[id][knifeId] = knifeModels[0];
+			set_hudmessage(0,255,0, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,0,0,0,kRenderNormal,35)
+		} 
+		case 1: 
+		{
+			set_hudmessage(255,0,0, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,255,0,0,kRenderNormal,35)
 		}
-		case 1:
+		case 2: 
 		{
-			specialKnife[id][knifeId] = knifeModels[1];
+			set_hudmessage(255,140,0, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,255,140,0,kRenderNormal,35)
 		}
-		case 2:
+		case 3: 
 		{
-			specialKnife[id][knifeId] = knifeModels[2];
-		}
-		case 3:
-		{
-			specialKnife[id][knifeId] = knifeModels[3];
+			set_hudmessage(255,255,0, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,255,255,0,kRenderNormal,35)
 		}
 		case 4:
 		{
-			specialKnife[id][knifeId] = knifeModels[4];
+			set_hudmessage(0,255,0, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,0,255,0,kRenderNormal,35)
+		} 
+		case 5: 
+		{
+			set_hudmessage(255,20,147, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,255,20,147,kRenderNormal,35)
+		} 
+		case 6: 
+		{ 
+			set_hudmessage(0,0,255, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4)  
+			set_user_rendering(id,kRenderFxGlowShell,0,0,255,kRenderNormal,35)
 		}
+		case 7: 
+		{
+			set_hudmessage(192,192,192, 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,192,192,192,kRenderNormal,35)
+		}
+		case 8: 
+		{
+			new culoare[3]
+			for(new i = 0; i < 3; i++)
+			{
+				culoare[i] = random_num(0,255)
+			}
+			set_hudmessage(culoare[0],culoare[1],culoare[2], 0.02, 0.73, 0, 6.0, 8.0, 0.1, 0.2, 4) 
+			set_user_rendering(id,kRenderFxGlowShell,culoare[0],culoare[1],culoare[2],kRenderNormal,35)
+		}
+		case 9: 
+		{
+			return PLUGIN_CONTINUE
+		} 
 	}
-
-	Save(id);
-	menu_destroy( menu );
-	return PLUGIN_HANDLED;
-}
-//Menu to choose the sound
-public SoundsMenu(id){
-	new menu = menu_create( "\rChoose Kill Sound!:", "menu_handler12" );
-	new txt[128];
-	for(new i =0;i<42;i++){
-		format(txt,charsmax(txt),"\w%s", recordSoundsNames[i])
-		menu_additem( menu, txt, "", 0 );
-	}
-
-	menu_setprop( menu, MPROP_EXIT, MEXIT_ALL );
-	menu_display( id, menu, 0 );
-	return PLUGIN_CONTINUE;
-}
-//Second Handler for the second menu
-public menu_handler12( id, menu, item){
-	vipSelectedSound[id] = recordSounds[item];
-
-	Save(id);
-	menu_destroy( menu );
-	return PLUGIN_HANDLED;
+	return PLUGIN_HANDLED 
 }
 //Show Motd
 public ShowMotd(id){
@@ -624,6 +632,7 @@ public Save(id){
 	new key1[30];
 	new key2[30];
 	new key3[30];
+
 
 	get_user_name( id , name , charsmax( name ) );
 
