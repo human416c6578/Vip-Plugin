@@ -235,9 +235,9 @@ public plugin_precache(){
 		precache_model(premiumKnifeModels[i]);
 
 	//precache vip models
-	precache_model("models/player/admin_cte/admin_cte.mdl");
-	precache_model("models/player/admin_te/admin_te.mdl");
-	precache_model("models/player/vipHD/vipHD.mdl");
+	precache_generic("models/player/admin_cte/admin_cte.mdl");
+	precache_generic("models/player/admin_te/admin_te.mdl");
+	precache_generic("models/player/vipHD/vipHD.mdl");
 
 }
 
@@ -301,6 +301,7 @@ public NewRound(){
 }
 //Event ResetHUD, to set the player model
 public resetModel(id, level, cid){
+	if(!is_user_connected(id)) return PLUGIN_HANDLED;
 	if(is_user_admin(id)){
 		if(cs_get_user_team(id) == CS_TEAM_T)
 			cs_set_user_model(id, "admin_te");
@@ -511,6 +512,11 @@ public SelectSkinMenu(id){
 }
 //Second Handler for the second menu
 public menu2_handler( id, menu, item){
+	if ( item == MENU_EXIT ){
+		menu_destroy( menu );
+		return PLUGIN_HANDLED;
+	}
+
 	if(knifeId == 1 && item == 0){
 		specialKnife[id][knifeId] = "models/llg/v_butcher.mdl";
 		Save(id);
@@ -538,9 +544,16 @@ public VipKnifeSkinMenu(id){
 }
 //Second Handler for the second menu
 public vip_handler( id, menu, item){
+	if ( item == MENU_EXIT ){
+		menu_destroy( menu );
+		return PLUGIN_HANDLED;
+	}
+
 	specialKnife[id][2] = vipKnifeModels[item];
 	Save(id);
 	menu_destroy( menu );
+
+	return PLUGIN_HANDLED;
 }
 
 //Second Menu
@@ -559,6 +572,11 @@ public PremiumKnifeSkinMenu(id){
 }
 //Second Handler for the second menu
 public premium_handler( id, menu, item){
+	if ( item == MENU_EXIT ){
+		menu_destroy( menu );
+		return PLUGIN_HANDLED;
+	}
+
 	specialKnife[id][3] = premiumKnifeModels[item];
 	Save(id);
 	menu_destroy( menu );
