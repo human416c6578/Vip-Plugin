@@ -213,7 +213,7 @@ bool:is_date_expired(const szDate[], const iLine)
 
 
 public bool:isPlayerVip(id){
-	if(time_check()) return true;
+	//if(time_check()) return true;
 
 	return isVip[id];
 }
