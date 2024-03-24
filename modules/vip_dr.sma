@@ -52,8 +52,8 @@ public GiveWeapons(id){
 	fm_give_item(id,"CSW_VESTHELM");
 	fm_set_user_health(id, 150);
 	cs_set_user_armor(id, 100, CS_ARMOR_VESTHELM);
-	if(!time_check())
-		fm_give_item(id,"weapon_hegrenade");
+	//if(!time_check())
+	//	fm_give_item(id,"weapon_hegrenade");
 	
 	return PLUGIN_HANDLED;
 }
